@@ -1,0 +1,52 @@
+// Given a composition with different kinds of words, return a list of the top K most frequent words in the composition.
+
+public class Solution {
+  private class myComparator implements Comparator<Map.Entry<String, Integer>>{
+    @Override
+    public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+      if (o1.getValue() > o2.getValue()) {
+        return -1;
+      } else if (o1.getValue() < o2.getValue()) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+  }
+  public String[] topKFrequent(String[] combo, int k) {
+    //iterate over input string, count the frequency of each word read
+    //hashMap<word, frequency>
+    //maintain a minHeap of size k, compare by frequency;
+    
+    Map<String, Integer> hashMap = new HashMap<>();
+    for (int i = 0; i < combo.length; i ++) {
+      hashMap.put(combo[i], hashMap.getOrDefault(combo[i], 0) + 1);
+    }
+    Queue<Map.Entry<String, Integer>> maxHeap = new PriorityQueue<>(new myComparator());
+    for (Map.Entry<String, Integer> entry : hashMap.entrySet()) {
+      maxHeap.add(entry);
+    }
+    // corner case
+    if (k > hashMap.size()) {
+      k = hashMap.size();
+    }
+    String[] result = new String[k];
+    
+    for (int i = 0; i < k; i ++) {
+      result[i] = maxHeap.poll().getKey();
+    }
+    return result;
+  }
+}
+
+/*
+TC: 
+on average, we put each element from string array to hashMap, each operation cost O(1), we do n times, in worst case, would be O(n)
+we put each entry from hashmap to maxHeap, each operation is log(n);
+we insert k elements from maxHeap to string array, it cost O(klogn)
+so in total (n+k)log(n);
+
+SC: hashMap O(n)
+    maxHeap O(n)
+    in total O(2n)
+*/
