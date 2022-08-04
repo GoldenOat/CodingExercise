@@ -1,0 +1,23 @@
+/* Given an integer array of size N - 1, containing all the numbers from 1 to N except one, find the missing number.*/
+
+public class Solution {
+  public int missing(int[] array) {
+    /*we put all nums from array to a hashset
+    **loop over 1 to N, check which num is not in hashset
+    */
+    Set<Integer> hashSet = new HashSet<>();
+    int result = 1;
+    if (array.length == 0) {
+      return result;
+    }
+    for (int num : array) {
+      hashSet.add(num);
+    }
+    for (int i = 1; i <= array.length + 1; i ++) {
+      if (!hashSet.contains(i)) {
+        result = i;
+      }
+    }
+    return result;
+  }
+}
