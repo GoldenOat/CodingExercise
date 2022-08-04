@@ -1,0 +1,31 @@
+import java.util.*;
+public class Solution {
+    /*
+    Given an array of meeting time intervals where intervals[i] = [start_i, end_i], determine if a person could attend all meetings.
+    Input: meetings = [[0, 30], [5, 10], [15, 20]]
+     */
+    public static boolean nonConflict(int[][] input) {
+        // step1: sort 2d array based on the value of start time
+        Arrays.sort(input, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return Integer.compare(o1[0], o2[0]);
+            }
+        });
+        int end = input[0][1];
+        for (int i = 1; i < input.length; i ++) {
+            if (input[i][0] < end) {
+                return false;
+            } else {
+                end = input[i][1];
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        int[][] testOne = new int[][]{{6, 10}, {1, 4}};
+        int[][] testTwo = new int[][]{{6, 10}, {1, 15}, {14, 16}};
+        System.out.println(nonConflict(testTwo));
+    }
+}
