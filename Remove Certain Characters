@@ -1,0 +1,35 @@
+/* Remove given characters in input string, the relative order of other characters should be remained. Return the new string after deletion.
+*Assumptions:
+*The given input string is not null.
+*The characters to be removed is given by another string, it is guaranteed to be not null.
+*Examples:
+*input = "abcd", t = "ab", delete all instances of 'a' and 'b', the result is "cd".
+*/
+
+public class Solution {
+  public String remove(String input, String t) {
+    
+    char[] inputArray = input.toCharArray();
+    char[] targetArray = t.toCharArray();
+    Set<Character> targetSet = new HashSet<>();
+    for (char c : targetArray) {
+      targetSet.add(c);
+    }
+    int slow = 0;
+    int fast = 0;
+    while(fast < inputArray.length) {
+      if(targetSet.contains(inputArray[fast])) {
+        fast ++;
+      } else {
+        inputArray[slow] = inputArray[fast];
+        slow ++;
+        fast ++;
+      }
+    }
+    StringBuilder sb = new StringBuilder();
+    for(int i = 0; i < slow; i ++) {
+      sb.append(inputArray[i]);
+    }
+    return sb.toString();
+  }
+}
