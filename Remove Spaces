@@ -1,0 +1,48 @@
+/*Given a string, remove all leading/trailing/duplicated empty spaces.
+
+Assumptions:
+
+The given string is not null.
+Examples:
+
+“  a” --> “a”
+“   I     love MTV ” --> “I love MTV”
+*/
+
+public class Solution {
+  public String removeSpaces(String input) {
+    char[] inputArray = input.toCharArray();
+    
+    // slow pointer: all char on the leftside should be kept;
+    //fast pointer: char being processed
+    int s = 0;
+    int f = 0;
+    while(f < inputArray.length) {
+      //any char != ' ', should be copied 
+      if(inputArray[f] != ' ') {
+        inputArray[s] = inputArray[f];
+        s ++;
+        f ++;
+      } else {
+      
+        //if encounter ' ', look at the s index, if s == 0 || inputArray[s-1] == ' ', not copy; else, copy;
+        if(s == 0 || inputArray[s-1] == ' ') {
+          f ++;
+        } else {
+          inputArray[s] = inputArray[f];
+          s ++;
+          f ++;
+        }
+      }
+    }
+    //post-processing
+    if (s == 0) {
+      return "";
+    }
+    if ((s < inputArray.length) && (inputArray[s-1] == ' ')) {
+      return new String(inputArray, 0, s-1);
+    } else {
+      return new String(inputArray, 0, s);
+    }
+  }
+}
