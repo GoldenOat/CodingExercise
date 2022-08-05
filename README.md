@@ -1,2 +1,2 @@
 # CodingExercise
-solution for leetcode exercise
+solution for code exercise
