@@ -1,0 +1,33 @@
+/*Remove adjacent, repeated characters in a given string, leaving only one character for each group of such characters.
+
+Assumptions
+Try to do it in place.
+
+Examples
+“aaaabbbc” is transferred to “abc”
+
+Corner Cases
+If the given string is null, returning null or an empty string are both valid.
+*/
+
+public class Solution {
+  public String deDup(String input) {
+    // corner case
+    if (input == null || input.length() == 0) {
+      return "";
+    }
+    char[] inputArr = input.toCharArray();
+    int s = 1; //char on the leftside of s should be kept
+    int f = 1; //char being processed
+    while (f < inputArr.length) {
+      if (inputArr[f] != inputArr[s-1]) {
+        inputArr[s] = inputArr[f];
+        s ++;
+        f ++;
+      } else {
+        f ++;
+      }
+    }
+    return new String(inputArr, 0, s);
+  }
+}
