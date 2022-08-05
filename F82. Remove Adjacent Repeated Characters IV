@@ -1,0 +1,38 @@
+/*Repeatedly remove all adjacent, repeated characters in a given string from left to right.
+
+No adjacent characters should be identified in the final string.
+
+Examples
+
+"abbbaaccz" → "aaaccz" → "ccz" → "z"
+"aabccdc" → "bccdc" → "bdc"
+*/
+
+public class Solution {
+  public String deDup(String input) {
+    /*
+    use a stack to store the first currence of char;
+    linear scan;
+    */
+    char[] inputArr = input.toCharArray();
+    int fast = 0;
+    Deque<Character> stack = new ArrayDeque<>();
+    while (fast < inputArr.length) {
+      if (stack.isEmpty() || inputArr[fast] != stack.peekFirst()) {
+        stack.offerFirst(inputArr[fast]);
+        fast ++;
+      } else {
+        while (fast < inputArr.length && inputArr[fast] == stack.peekFirst()) {
+          fast ++;
+        }
+        stack.pollFirst();
+      }
+    }
+    StringBuilder result = new StringBuilder();
+    int s = stack.size();
+    for (int i = 0; i < s; i ++) {
+      result.append(stack.pollLast());
+    }
+    return result.toString();
+  }
+}
