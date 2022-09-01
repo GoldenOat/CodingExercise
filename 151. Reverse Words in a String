@@ -1,0 +1,79 @@
+import java.util.*;
+/*
+151. Reverse Words in a String
+Given an input string s, reverse the order of the words.
+A word is defined as a sequence of non-space characters. The words in s will be separated by at least one space.
+Return a string of the words in reverse order concatenated by a single space.
+Note that s may contain leading or trailing spaces or multiple spaces between two words.
+The returned string should only have a single space separating the words. Do not include any extra spaces.
+*/
+
+/*
+input: String s
+output: String
+Assume: There is at least one word in s
+*/
+
+public class Solution {
+    public String reverseWords(String s) {
+        if (s == null) {
+            return null;
+        }
+        char[] charArr = s.toCharArray();
+        int size = charArr.length;
+        int i = 0;
+        int j = 0;
+        // step1: reverse the whole sentence;
+        reverse(charArr, 0, size - 1);
+        // step2: reverse each word;
+        reverseWords(charArr, size);
+        // step3: cleanUp the space;
+        return cleanSpaces(charArr, size);
+    }
+
+    private String cleanSpaces(char[] charArr, int size) {
+        // trim leading, trailing, and multiple spaces
+        int i = 0; //
+        int j = 0;
+        while (j < size) {
+            while (j < size && charArr[j] == ' ') j ++; // skip space
+            while (j < size && charArr[j] != ' ') charArr[i++] = charArr[j++]; // keep nonspaces
+            while (j < size && charArr[j] == ' ') j ++; // skip space
+                if (j < size) charArr[i++] = ' '; // keep only one space
+        }
+        return new String(charArr).substring(0, i);
+    }
+
+    private void reverseWords(char[] charArr, int size) {
+        int i = 0;
+        int j = 0;
+        while (i < size) {
+            while (i < j || i < size && charArr[i] == ' ') { // skip space
+                i ++;
+            }
+            while (j < i || j < size && charArr[j] != ' ') { // skip word
+                j ++;
+            }
+            reverse(charArr, i, j-1);
+        }
+    }
+
+    private void reverse(char[] charArr, int i, int j) {
+        while (i < j) {
+            char temp = charArr[i];
+            charArr[i++] = charArr[j];
+            charArr[j--] = temp;
+        }
+    }
+
+    public static void main(String[] args) {
+        Solution test = new Solution();
+        System.out.println(test.reverseWords("i love yahoo"));
+    }
+}
+/*
+TC: O(n)
+SC: O(n)
+*/
+
+
