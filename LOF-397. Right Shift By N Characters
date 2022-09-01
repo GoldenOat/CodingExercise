@@ -1,0 +1,52 @@
+import java.util.*;
+/*
+LOF-397. Right Shift By N Characters
+Right shift a given string by n characters.
+"abc", 4 -> "cab"
+*/
+
+/*
+input: String input, int n
+output: String
+Assume: the giving string is not null; n >= 0
+*/
+
+public class Solution {
+    public String rightShift(String input, int n) {
+        // corner case
+        if (input.isEmpty() || n == 0) {
+            return input;
+        }
+        char[] iptArr = input.toCharArray();
+        int rotate = n % iptArr.length;
+        int idx = iptArr.length - rotate; // where we separate two parts
+        // step1: reverse each part;
+        reverse(iptArr, 0, idx - 1);
+        reverse(iptArr, idx, iptArr.length - 1);
+        // step2: reverse whole string;
+        reverse(iptArr, 0, iptArr.length - 1);
+        return new String(iptArr);
+    }
+
+    private void reverse(char[] ipt, int i, int j) {
+        if (ipt.length == 0 || i >= j) {
+            return;
+        }
+        while (i < j) {
+            char temp = ipt[i];
+            ipt[i++] = ipt[j];
+            ipt[j--] = temp;
+        }
+    }
+    public static void main(String[] args) {
+        Solution test = new Solution();
+        System.out.println(test.rightShift("abc", 4));
+    }
+
+}
+/*
+TC: O(n)
+SC: O(n)
+*/
+
+
