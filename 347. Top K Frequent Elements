@@ -1,0 +1,38 @@
+/**
+* 347. Top K Frequent Elements
+* https://leetcode.com/problems/top-k-frequent-elements/
+*/
+
+/** Solution1:
+* build a hash map element -> its frequency 
+* put each pair in hashmap to a minHeap maintain k size; 
+* poll all k elements from  minHeap;
+*/
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        int[] result = new int[k];
+        Map<Integer, Integer> hashMap = new HashMap<>();
+        for (int num : nums) {
+          hashMap.put(num, hashMap.getOrDefault(num, 0) + 1);
+        }
+        Queue<Map.Entry<Integer, Integer>> minHeap = new PriorityQueue<>((a, b) -> a.getValue() - b.getValue());
+        for (Map.Entry<Integer, Integer> e : hashMap.entrySet()) {
+          minHeap.offer(e);
+          if (minHeap.size() > k) minHeap.poll();
+        }
+        for (int i = 0; i < k; i ++) {
+          result[i] = minHeap.poll().getKey();
+        }
+        return result;    
+    }
+}
+
+/**
+* Time Complexity: O(nlog(k))
+* Build a hashMap takes O(N) time where N is a number of elements in the list;
+* To add the first k elements takes a linear time O(k) in the average case, and O(log1+log2+...+logk)=O(logk!)=O(klogk) in the worst case
+* The time complexity of heap push/pop is O(logk) and we do it (N - k) times that means O((N−k)logk) time complexity. 
+* Adding both parts up, we get O(Nlogk) 
+* convert the heap into an output array. That could be done in O(klogk) 
+* Space Complexity: O(n)
+*/
