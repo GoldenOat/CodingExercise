@@ -1,0 +1,30 @@
+238. Product of Array Except Self
+https://leetcode.com/problems/product-of-array-except-self/
+
+/**
+* In first pass calculate the left product except self and in second calculate the right 
+*/
+
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+      int[] result = new int[nums.length];
+      result[0] = 1;
+      for (int i = 0; i < nums.length; i ++) {
+        result[i + 1] = result[i] * nums[i];
+      }
+      
+      for (int i = nums.length - 2; i >= 0; i --) {
+        result[i] = result[i] * nums[i + 1];
+        nums[i] = nums[i] * nums[i + 1];
+      }
+      return result;   
+    }
+}
+
+/**
+* Time complexity : O(n) where n represents the number of elements in the input array. 
+* We use one iteration to construct the array L, one to update the array answer.
+* Space Complexity: O(1) since don't use any additional array for our computations. 
+* The problem statement mentions that using the answer array doesn't add to the space complexity.
+*/
+
