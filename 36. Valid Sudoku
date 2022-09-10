@@ -1,0 +1,33 @@
+36. Valid Sudoku
+https://leetcode.com/problems/valid-sudoku/
+
+/**
+1. we need a hashSet to record each num and its three locations (row, col and 3 * 3 block);
+2. if we met '.', we continue; otherwise, we encoded each num and its three relative locations into String
+3. then, we check if any repetitions in hashSet;
+*/
+
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        Set<String> hashSet = new HashSet<>();
+        for (int i = 0; i < board.length; i ++) {
+          for (int j = 0; j < board[0].length; j ++) {
+            if (board[i][j] == '.') {
+                continue;
+            }
+            String row = "" + board[i][j] + 'r' + i;
+            String col = "" + board[i][j] + 'c' + j;
+            String block = "" + board[i][j] + 'b' + i/3 + j/3;
+            if (!hashSet.add(row) || !hashSet.add(col) || !hashSet.add(block)) {
+              return false;
+            }
+          }
+        }
+        return true;     
+    }
+}
+
+/**
+TC: O(n^2)
+SC: O(3n)
+*/
