@@ -1,0 +1,93 @@
+611. Compress String II
+https://app.laicode.io/app/problem/611?plan=3
+
+// Given a string, replace adjacent, repeated characters with the character followed by the number of repeated occurrences.
+
+// Assumptions: 
+The string is not null
+The characters used in the original string are guaranteed to be ‘a’ - ‘z’
+
+// Examples
+“abbcccdeee” → “a1b2c3d1e3”
+
+/**
+3 pointers:
+fastFirst: the index of the char being processed
+fastLast: the index of the first char != a[f]
+slow: processed letters should be kept
+*/
+
+public class Solution {
+  public String compress(String input) {
+    if (input.length() == 0) {
+      return input;
+    }
+    char[] ipt = input.toCharArray();
+    int slow = 0; // [0,slow): need to be kept
+    int fastFirst = 0; // element being processed
+    int fastLast = 0; // count how many duplicates
+    int equalOne = 0; // # of char which has only one
+    while (fastFirst < ipt.length) { // first pass: only insert duplicate numbers for multiple copies
+      int dup = 1; // # of char of duplicates
+      while (fastLast < ipt.length && ipt[fastLast] == ipt[fastFirst]) { // count # of duplicates
+        fastLast ++;
+      }
+      dup = fastLast - fastFirst;
+      if (dup > 1) { // step1: deal with char with multiple duplicates
+        ipt[slow ++] = ipt[fastFirst];
+        int digits = (int) (Math.log10(dup) + 1); // # of digits in duplicates number, eg. 2 digits in number 33
+        int i = 1; // 控制变量用
+        while (dup != 0) { // insert all digits of duplicates number 
+          ipt[slow + digits - i] = (char) (dup % 10 + '0'); // 个位数先放，从后向前
+          dup /= 10;
+          i ++;
+        }
+        slow += digits;        
+      } else { // step2: deal with char only has one 
+        equalOne ++;
+        ipt[slow ++] = ipt[fastFirst];
+      }
+      fastFirst = fastLast; 
+    }
+    // second pass: insert '1' for just one copy char;
+    if (fastFirst - slow < equalOne) { // 需要扩容的情况
+      char[] rslt = new char[slow + equalOne];
+      int cur = 0;
+      slow = 0;
+      while (cur < rslt.length) {
+        rslt[cur ++] = ipt[slow ++]; // we first insert the first char into new array;
+        if (slow == ipt.length || !Character.isDigit(ipt[slow])) { 
+          // if the last char at slow is not digit || if the next char is not digit, we insert 1
+          rslt[cur ++] = '1';
+        }
+        while (cur < rslt.length && Character.isDigit(ipt[slow])) {
+          // when the next char is digits, we keep copy digits to new array
+          rslt[cur ++] = ipt[slow ++];
+        }
+      }
+      return new String(rslt);
+    } else { // 不需要扩容，inplace insert 1: 倒着copy
+      int cur = ipt.length - 1;
+      slow --;
+      while (slow >= 0) {
+        if (!Character.isDigit(ipt[slow])) {
+          // the last one is not digit, we need to insert '1'
+          ipt[cur --] = '1';
+          ipt[cur --] = ipt[slow --];
+        } else {
+          while (Character.isDigit(ipt[slow])) {
+            ipt[cur --] = ipt[slow --];
+          }
+          ipt[cur --] = ipt[slow --];
+        }
+      }
+      return new String(ipt, cur + 1, ipt.length - cur - 1);    
+    }
+  }
+}
+
+/**
+TC: O(2n)
+SC: 如果需要扩容 O(n); otherwise, O(1)
+*/
+
