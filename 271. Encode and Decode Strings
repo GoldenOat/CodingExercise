@@ -1,0 +1,42 @@
+271. Encode and Decode Strings
+https://leetcode.com/problems/encode-and-decode-strings/
+
+/**
+encode: we use the length of each word and "#" before each word as delimiter
+decode: we use a pointer b to mark the start of each word
+        a point d to mark the location of '#'
+*/
+public class Codec {
+
+    // Encodes a list of strings to a single string.
+    public String encode(List<String> strs) {
+      StringBuilder rslt = new StringBuilder();
+      for (String s : strs) {
+        rslt.append(Integer.toString(s.length()) + "#" + s);
+      }  
+      return rslt.toString();
+    }
+    
+    // Decodes a single string to a list of strings.
+    public List<String> decode(String s) {
+      List<String> rslt = new ArrayList<>();
+      int b = 0; // beginning char of each words' length: e.g. "5#hello", b is idx of '5'
+      while (b < s.length()) {
+        int d = b; // pointer at delimiter '#'
+        while (s.charAt(d) != '#') { // d starts at b, then look for '#'
+          d ++;
+        } 
+        int len = Integer.valueOf(s.substring(b,d)); // length of each word
+        b = d + 1 + len; // move b to the beginning of next word length
+        String word = s.substring(d+1, b);
+        rslt.add(word);    
+      }
+      return rslt;    
+    }
+}
+
+/**
+TC: O(n)
+SC: O(1)
+*/
+
