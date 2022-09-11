@@ -1,0 +1,59 @@
+LC-398. All Anagrams
+https://app.laicode.io/app/problem/398?plan=3
+/**
+* Find all occurrence of anagrams of a given string s in a given string l. Return the list of starting indices.
+* Assumptions
+  sh is not null or empty.
+  lo is not null.
+* Examples
+  l = "abcbac", s = "ab", return [0, 3] since the substring with length 2 starting from index 0/3 are all anagrams of "ab" ("ab", "ba").
+*/
+
+public class Solution {
+  public List<Integer> allAnagrams(String sh, String lo) {
+    List<Integer> rslt = new ArrayList<>();
+    // corner case
+    if (lo.length() == 0) {
+      return rslt;
+    }
+    // initialize
+    char[] shArr = sh.toCharArray();
+    char[] loArr = lo.toCharArray();
+    Map<Character, Integer> shHM = new HashMap<>();
+    Map<Character, Integer> loHM = new HashMap<>();
+    int s = 0;
+    int f = s + sh.length() - 1; // 2
+    
+    // put string sh and its frequency into sh hashmap
+    for (int i = 0; i < shArr.length; i ++) {
+      shHM.put(shArr[i], shHM.getOrDefault(shArr[i], 0) + 1);
+    }
+    
+    while (f < loArr.length) {
+      loHM.clear();
+      for (int i = s; i <= f; i ++) { // put the string in each sliding window into a hashmap
+        loHM.put(loArr[i], loHM.getOrDefault(loArr[i], 0) + 1);
+      }
+      // compare shHM with loHM
+      if (shHM.equals(loHM)) {
+        rslt.add(s);
+      }
+      s ++;
+      f ++; 
+    }
+    return rslt;
+  }
+}
+
+/**
+* sliding window + two counter hashmaps letter -> its count. 
+* The first hashmap is a reference counter shHM for string sh
+* the second one is a counter loHM for string in the sliding window.
+* move sliding window along the string lo, recompute the second hashmap loHM in a constant time, compare it with the first hashmap shHM
+*/
+
+/**
+TC: we pass once along the string sh and lo, O(sh.length + lo.length);
+SC: O(26); shHM and loHM will contain at most 26 elements each. this can be considered as O(1) space.
+*/
+
