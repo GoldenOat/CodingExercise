@@ -1,0 +1,54 @@
+LC-253. Longest Substring Without Repeating Characters
+https://app.laicode.io/app/problem/253?plan=3
+/**
+* Given a string, find the longest substring without any repeating characters and return the length of it. 
+* The input string is guaranteed to be not null.
+* For example, the longest substring without repeating letters for "bcdfbd" is "bcdf", we should return 4 in this case.
+*/
+
+/**
+* sliding window
+* initial: slow -> 0; fast -> 1; count -> 1; countMax 
+           hashSet: [input[0], ]
+* for each step: 
+* check if input[f] in hashset {
+    if not in hashset, add input[f] to hashSet, f++, count ++;
+    if in hashSet, remove input[s] from hashSet, s--, count --;
+    update countMax;
+  }
+*/
+
+public class Solution {
+  public int longest(String input) {
+    // corner case
+    if (input.length() == 0 || input.length() == 1) {
+      return input.length();
+    }
+    char[] arr = input.toCharArray();
+    Set<Character> hashSet = new HashSet<>();
+    int s = 0;
+    int f = 1;
+    int count = 1;
+    int countMax = Integer.MIN_VALUE;
+    hashSet.add(arr[s]);
+    while (f < arr.length) {
+      while (f < arr.length && !hashSet.contains(arr[f])) {
+        hashSet.add(arr[f]);
+        f ++;
+        count ++;
+      }
+      if (count > countMax) {
+        countMax = count;
+      }
+      hashSet.remove(arr[s]);
+      count --;
+      s ++;
+    }
+    return countMax;   
+  }
+}
+
+/**
+TC: O(2n), fast n, slow n
+SC: O(n), hashSet.size()
+*/
