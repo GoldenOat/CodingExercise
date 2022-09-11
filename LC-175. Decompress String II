@@ -1,0 +1,41 @@
+LC-175. Decompress String II
+https://app.laicode.io/app/problem/175?plan=3
+
+/**
+*Given a string in compressed form, decompress it to the original string. The adjacent repeated characters in the original string are compressed to have the character followed by the number of repeated occurrences.
+
+*Assumptions
+The string is not null
+The characters used in the original string are guaranteed to be ‘a’ - ‘z’
+There are no adjacent repeated characters with length > 9
+
+*Examples
+
+“a1c0b2c4” → “abbcccc”
+*/
+
+public class Solution {
+  public String decompress(String input) {
+    StringBuilder rslt = new StringBuilder();
+    int i = 0; // which char we are looking at
+    while (i < input.length()) {
+      int j = i + 1; // how many s[a] we need to add to rslt
+      while (j < input.length() && Character.isDigit(input.charAt(j))) {
+        j ++;
+      }
+      if (j <= input.length()) {
+        int len = Integer.valueOf(input.substring(i+1, j));
+        for (int k = 0; k < len; k ++) {
+        rslt.append(input.charAt(i));
+        }
+      } 
+      i = j;   
+    }
+    return rslt.toString();
+  }
+}
+
+/**
+TC: O(n), n is the length of the result string
+SC: O(n), stringbuilder
+*/
