@@ -1,0 +1,226 @@
+Implement HashMap in Java
+
+/**
+ * data field: 
+  Entry[]: array of entries
+  each entry is actually a singly linked list(handle collision) containing the <key, value> pair
+  
+ * API: 
+  put(K key,V value)
+  get(K key)
+  remove(K key)
+  size()
+  isEmpty()
+  clear()
+  containsKey(K key)
+  
+ * constructor:
+    capacity, load factor, default
+*/
+ 
+ public class MyHashMap<K, V> {
+    // define the class for each entry, which is actually a singly linked list
+    public static class Node<K, V> {
+        final K key;
+        V value;
+        Node<K, V> next;
+        Node(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+        
+        public K getKey() {
+            return key;
+        }
+        public V getValue() {
+            return value;
+        }
+        public void setValue(V value) {
+            this.value = value;
+        }
+    }
+    // define final variables 
+    private static final int DEFAULT_CAPACITY = 16;
+    private static final float DEFAULT_LOAD_FACTOR = 0.75f;
+    private static final int SCALE_FACTOR = 2;
+    private Node<K, V>[] array;
+    private int size; // how many pairs actually stored in hashmap
+    private float loadFactor; // determine when to rehash
+    
+    // define constructor
+    public MyHashMap() {
+        this(DEFAULT_CAPACITY, DEFAULT_LOAD_FACTOR);
+    }
+    
+    public MyHashMap(int capacity, float loadFactor) {
+        if (cap <= 0) {
+            throw new IlegalArgumentException("cap can not be less than 0");            
+        }
+        this.array = (Node<K, V>[]) (new Node[cap]);
+        this.capacity = cap;
+        this.loadFactor = loadFactor;
+    }
+    public int size() {
+        return size;
+    }
+    public boolean isEmpty() {
+        return size == 0;
+    }
+    
+    public void clear() {
+        Array.fill(this.array, null);
+        size = 0;
+    }
+    
+    // must gaurantee non-negative hashcode
+    private int hash(K key) {
+        if (key == null) {
+            return 0;
+        }
+        return key.hashCode() & 0X7FFFFFFF; 
+    }
+
+
+    private int getIndex(K key) {
+        return hash(key) % array.length
+    }
+
+    // handle when value is null or not null
+    private boolean equalsValue(V v1, V v2) {
+        if (v1 == null && v2 == null) {
+            return true;
+        }
+        if (v1 == null || v2 == null) {
+            return false;
+        }
+        return v1.equals()
+    }
+
+    // traverse the whole array, and traverse each node of the linked list
+    public boolean containsValue(V value) {
+        // special case
+        if (isEmpty()) {
+            return false;
+        }
+        for (Node<K, V> node : array) {
+            while (node != null) {
+                if (equalsValue(node.value, value)) {
+                    return true;
+                }
+                node = node.next;
+            }
+        }
+        return false;
+    }
+
+    // must handle key is null or not null
+    private boolean equalsKey(K k1, K k2) {
+        if (k1 == null && k2 == null) {
+            return true;
+        }
+        if (k1 == null || k2 == null) {
+            return false;
+        }
+        return k1.equals(k2);
+    }
+
+    public boolean containsKey(K key) {
+        int index = getIndex(key);
+        Node<K, V> node = array[index];
+        while (node != null) {
+            if (equalsKey(node.key, key)) {
+                return true;
+            }
+            node = node.next;
+        }
+        return false;
+    }
+
+    // if key doe not exist, return null
+    public V get(K key) {
+        int index = getIndex(key);
+        Node<K, V> node = array[index];
+        while (node != null) {
+            if (equalsKey(node.key, key)) {
+                return node.value;
+            }
+            node = node.next;
+        }
+        return null;
+    }
+
+    // insert/update
+    // if the key already exist, return the old corresponding value
+    // if the key not exist, return null
+    public V put(K key, V value) {
+        int index = getIndex(key);
+        Node<K, V> head = array[index];
+        Node<K, V> node = head;
+        while (node != null) {
+            // check if the key already exist
+            if (equalsKey(node.key, key)) {
+                //  we update the value and return the old value;
+                V oldValue = node.value;
+                node.value = value;
+                return oldValue;
+            }
+            node = node.next;
+        }
+        // if not exist, insert the new node before the head and update the head;
+        Node<K, V> newNode = new Node(key, value);
+        newNode.next = head; // insert new node before old head
+        array[index] = newNode; // this is newHead
+        size ++;
+        if (needRehashing()) {
+            rehashing();
+        }
+        return null;
+    }
+
+    private boolean needRehashing() {
+        // float load factor
+        float ratio = (size + 0.0f) / array.length;
+        return ratio >= loadFactor;
+    }
+
+    private void rehashing() {
+        // new double sized array
+        Node<K, V>[] oldArray = array;
+        array = (Node<K, V>[]) (new Node[array.length * SCALE_FACTOR]);
+        for (Node<K, V> node : oldArray) {
+            while (node != null) {
+                Node<K, V> next = node.next;
+                int index = getIndex(node.key);
+                node.next = array[index];
+                array[index] = node;
+                node = next;
+            }
+        }
+    }
+
+    public V remove(K key) {
+        // get index
+        // delete operation on the linked list
+        // size -- 
+        int index = getIndex(key);
+        Node<K, V> node = array[index];
+        Node<K, V> pre = null; 
+        while (node != null) {
+            if (equalsKey(node.key, key)) {
+                if (pre != null) {
+                    pre.next = node.next;
+                } else {
+                    array[index] = node.next;
+                }
+                size --;
+                return node.value;
+            }
+            pre = node; 
+            node = node.next;
+        }
+        return null;
+    }
+
+ }
+  
+  
