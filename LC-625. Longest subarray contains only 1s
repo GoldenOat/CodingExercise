@@ -30,16 +30,23 @@ We either increase the size of the window or remain same but never reduce the si
 
 public class Solution {
   public int longestConsecutiveOnes(int[] nums, int k) {
-    int s = 0, f; 
-    for (f = 0; f < nums.length; f ++) {
+    int s = 0;
+    int f = 0;
+    while (f < nums.length) {
       if (nums[f] == 0) {
         k --;
       }
-      if (k < 0 && nums[s ++] == 0) {
-        k ++;
+      if (k < 0) {
+        if (nums[s] == 1) {
+          s ++;
+        } else {
+          k ++;
+          s ++;
+        }
       }
+      f ++;
     }
-    return f - s;
+    return f - s;    
   }
 }
 
