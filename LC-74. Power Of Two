@@ -1,0 +1,13 @@
+LC-74. Power Of Two
+https://app.laicode.io/app/problem/74?plan=26
+/**
+Determine if a given integer is power of 2.
+*/
+
+public class Solution {
+  public boolean isPowerOfTwo(int number) {
+    // find if there is only one 1 in bit representations
+    // trick: must be non-negative
+    return number > 0 && (number & (number - 1)) == 0;
+  }
+}
