@@ -1,0 +1,83 @@
+15. 3Sum
+https://leetcode.com/problems/3sum/
+/**
+Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+Notice that the solution set must not contain duplicate triplets.
+
+Example 1:
+Input: nums = [-1,0,1,2,-1,-4]
+Output: [[-1,-1,2],[-1,0,1]]
+Explanation: 
+nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0.
+nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0.
+nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0.
+The distinct triplets are [-1,0,1] and [-1,-1,2].
+Notice that the order of the output and the order of the triplets does not matter.
+
+Example 2:
+Input: nums = [0,1,1]
+Output: []
+Explanation: The only possible triplet does not sum up to 0.
+
+Example 3:
+Input: nums = [0,0,0]
+Output: [[0,0,0]]
+Explanation: The only possible triplet sums up to 0.
+ 
+Constraints:
+3 <= nums.length <= 3000
+-105 <= nums[i] <= 105
+*/
+
+class Solution {
+    /**
+    sort the array to skip duplicate values;
+    After sorting the array, we move our pivot element nums[i] and analyze elements  
+    to its right. We find all pairs whose sum is equal -nums[i] using the two
+    pointers pattern, so that the sum of the pivot element (nums[i]) and the pair
+    (nums[i]) is equal to zero.
+    */
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);   
+        List<List<Integer>> rslt = new ArrayList<>();
+        for (int i = 0; i < nums.length; i ++) {
+            if (i == 0 | (i > 0 && nums[i] != nums[i-1])) {
+                twoSum(nums, i, rslt);
+            }
+        }
+         return rslt;  
+    }
+    void twoSum(int[] nums, int i, List<List<Integer>> rslt) {
+        int s = i + 1;
+        int f = nums.length - 1;
+        while (s < f) {
+                int sum = nums[i] + nums[s] + nums[f];
+                if (sum == 0) {
+                    List<Integer> comb = new ArrayList<>();
+                    comb.add(nums[i]);
+                    comb.add(nums[s]);
+                    comb.add(nums[f]);
+                    rslt.add(comb);
+                    while (s < f && nums[s+1] == nums[s]) {
+                        s ++;
+                    }
+                    while (s < f && nums[f-1] == nums[f]) {
+                        f --;
+                    }
+                    s ++;
+                    f --;
+                }
+                if (sum < 0) {
+                    s ++;
+                }
+                if (sum > 0) {
+                    f --;
+                }   
+        }    
+    }
+}
+
+/**
+TC: O(n^2 + nlogn) -> twoSum is O(n), and we call it n times, sorting costs nlogn
+SC: from O(logn) to O(n), depending on the implementation of the sorting algorithm
+*/
