@@ -1,0 +1,22 @@
+LC-75. Number Of Different Bits
+https://app.laicode.io/app/problem/74?plan=26
+
+/**
+Determine the number of bits that are different for two given integers.
+
+Examples
+
+5(“0101”) and 8(“1000”) has 3 different bits
+*/
+
+public class Solution {
+  public int diffBits(int a, int b) {
+    // how many 1 in (a ^ b)
+    // trick: need to use >>> unsigned shift
+    int count = 0;
+    for (int c = a ^ b; c != 0; c = c >>> 1) {
+      count += (c & 1);
+    }
+    return count;
+  }
+}
