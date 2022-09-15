@@ -25,43 +25,42 @@ step3: then we reverse mergeSort, reorder(chunk1+chunk3), reorder(chunk2+chunk4)
 
 public class Solution {
   public int[] reorder(int[] array) {
-    
-    // 判断奇偶
+    // 判断奇偶 
     if (array.length % 2 == 0) {
-      reorder(array, 0, array.length - 1);
+      reOrder(array, 0, array.length - 1);
     } else {
-      reorder(array, 0, array.length - 2);
+      reOrder(array, 0, array.length - 2);
     }
+    return array;
   }
-  private int[] reorder(int[] array, int i, int j) {
-    // base case:
+  void reOrder (int[] array, int l, int r) {
+    // base case
     if (l >= r - 2) {
-      return array;
+      return;
     }
-    
-    int l = 0;
-    int r = array.length - 1;
     int size = r - l + 1;
     int m = l + size / 2;
     int lm = l + size / 4;
     int rm = m + size / 4;
-    reverse(array, lm, m - 1);
-    reverse(array, m, rm - 1);
-    reverse(array, lm, rm - 1);
-    reorder(array, l, l + (lm - l) * 2 - 1);
-    reorder(array, l + (lm - l) * 2, r);
+  
+    reverse(array, lm, m-1);
+    reverse(array, m, rm-1);
+    reverse(array, lm, rm-1);
+    reOrder(array, l, l + (lm - l) * 2 - 1);
+    reOrder(array, l + (lm - l) * 2, r);
   }
-  private void reverse(int[] array, int i, int j) {
+  void reverse(int[] array, int i, int j) {
     if (i >= j) {
       return;
     }
     while (i < j) {
       int temp = array[i];
-      array[i++] = array[j];
-      array[j--] = array[i]; 
+      array[i ++] = array[j];
+      array[j --] = temp;
     }
-  }
+  }  
 }
+
 
 /**
 TC: O(nlog(n)), log(n) levels, for each level, we reverse O(n);
