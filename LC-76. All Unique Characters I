@@ -1,0 +1,27 @@
+LC-76. All Unique Characters I
+https://app.laicode.io/app/problem/76?plan=26
+public class Solution {
+  /**
+    we have a s, which is 00000000... to record which char has been visited
+    for each char in word, we check if s[index[char]] is equal to 1;
+    so index(a) = 0; index(b) = 1 ...etc
+    if char not in s, we set index(char) in s == 1
+  */
+  public boolean allUnique(String word) {
+    int s = 0;
+    for (int i = 0; i < word.length(); i ++) {
+      char c = word.charAt(i);
+      int k = c - 'a';
+      if (((s >> k) & 1) == 1) {
+        return false;
+      }
+      s = 1 << k | s;
+    }
+    return true;
+  }
+}
+
+/**
+  TC: O(n)
+  SC: O(1)
+*/
