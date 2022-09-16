@@ -1,0 +1,33 @@
+11. Container With Most Water
+https://leetcode.com/problems/container-with-most-water/
+
+class Solution {
+    /**
+     two pointers: i = 0; j = length - 1
+     Area = (j - i) * (min(arr[j], arr[i]))
+     if arr[i] < arr[j]: i ++
+        else : j --
+    */
+    public int maxArea(int[] height) {
+        int i = 0;
+        int j = height.length - 1;
+        int maxArea = Integer.MIN_VALUE;
+        while (i < j) {
+            int wid = j - i;
+            int len = Math.min(height[i], height[j]);
+            int area = wid * len;
+            if (area > maxArea) maxArea = area; // update max area
+            if (height[i] < height[j]) {
+                i ++;
+            } else {
+                j --;
+            }
+        }
+        return maxArea;
+    }
+}
+
+/**
+ TC: O(n)
+ SC: O(1)
+*/
