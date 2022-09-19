@@ -1,0 +1,37 @@
+42. Trapping Rain Water
+https://leetcode.com/problems/trapping-rain-water/
+
+/**
+2 pointers:
+    left = 0; right = size - 1;
+    amount of water can trapped in each unit i: min(leftMax, rightMax) - height[i]
+*/
+class Solution {
+    public int trap(int[] height) {
+        if (height.length == 0) return 0;
+        
+        int l = 0;
+        int r = height.length - 1;
+        int maxL = height[l];
+        int maxR = height[r];
+        int rslt = 0;
+        while (l < r) {
+            if (maxL < maxR) {
+                l ++;
+                maxL = Math.max(maxL, height[l]);
+                rslt += maxL - height[l];
+                
+            } else {
+                r --;
+                maxR = Math.max(maxR, height[r]);
+                rslt += maxR - height[r];
+            }
+        }
+        return rslt;    
+    }
+}
+
+/**
+TC: O(n)
+SC: O(1)
+*/
