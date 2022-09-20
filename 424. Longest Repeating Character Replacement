@@ -1,0 +1,32 @@
+/**
+424. Longest Repeating Character Replacement
+https://leetcode.com/problems/longest-repeating-character-replacement/
+
+sliding window: l , r
+hashMap: store the char and their count in current sliding window
+when our window satisfies, we shift r
+otherwise, we shift l
+
+satisfy condition: window size - hashMap most frequent char count <= k
+*/
+class Solution {    
+    public int characterReplacement(String s, int k) {
+        char[] arr = s.toCharArray();
+        int rslt = 0;
+        Map<Character, Integer> count = new HashMap<>();
+        int l = 0;
+        for (int r = 0; r < arr.length; r ++) {
+            count.put(arr[r], count.getOrDefault(arr[r], 0) + 1);      
+            while ((r - l + 1) - Collections.max(count.values()) > k) { // we need to shift l pointer
+                count.put(arr[l], count.getOrDefault(arr[l], 0) - 1);
+                l ++;
+            }     
+            rslt = Math.max(rslt, r - l + 1);
+        }
+        return rslt;               
+    }
+}
+/**
+TC: O(26*n)
+SC: O(26)
+*/
