@@ -1,0 +1,45 @@
+/**
+567. Permutation in String
+https://leetcode.com/problems/permutation-in-string/
+
+sliding-window + robin karp
+*/
+class Solution {
+    public boolean checkInclusion(String s1, String s2) {
+        char[] arr1 = s1.toCharArray();
+        char[] arr2 = s2.toCharArray();
+        if (s1.length() > s2.length()) {
+            return false;
+        } 
+        Map<Character, Integer> hm = new HashMap<>();
+        for (char c : arr1) {
+            hm.put(c, hm.getOrDefault(c, 0) + 1);
+        }
+        
+        int r = 0;
+        int l = 0;
+        int match = 0;
+        while (r < arr2.length) {
+            if (hm.containsKey(arr2[r])) {
+                hm.put(arr2[r], hm.get(arr2[r]) - 1);
+                match = hm.get(arr2[r]) == 0 ? match + 1 : match;
+            }
+            if (r >= arr1.length) {
+               if (hm.containsKey(arr2[l])) {
+                    hm.put(arr2[l], hm.get(arr2[l]) + 1);
+                    match = hm.get(arr2[l]) == 1 ? match - 1 : match;
+                }
+                l ++;
+            }
+            r ++;
+            if (match == hm.size()) {
+                return true;
+            }
+        }
+        return false;        
+    }
+}
+/**
+T: O(len1 + len2)
+S: O(len1)
+*/
