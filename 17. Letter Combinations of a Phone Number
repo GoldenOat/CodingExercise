@@ -1,0 +1,39 @@
+/**
+17. Letter Combinations of a Phone Number
+https://leetcode.com/problems/letter-combinations-of-a-phone-number/
+*/
+
+class Solution {
+    /**
+    solution1-recursive: using a queue, BFS
+    
+    */
+    public List<String> letterCombinations(String digits) {
+        LinkedList<String> rslt = new LinkedList<String>();
+        // if the input is empty, we return an empty list
+        if (digits.isEmpty()) {
+            return rslt;
+        }
+        // we initialize a string array to map digits(index) to letters
+        String[] map = new String[] {"0", "1", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        rslt.add("");
+        // 
+        for (int i = 0; i < digits.length(); i ++) {
+            int idx = Character.getNumericValue(digits.charAt(i)); // 2
+            // pop string from queue as the base
+            // and push the complete string to queue
+            while (rslt.peek().length() == i) {
+                String base = rslt.remove();//""
+                for (Character c : map[idx].toCharArray()) {
+                    rslt.add(base + c); // "a", "b", "c"
+                }
+            }
+        }
+        return rslt;      		
+	}
+}
+
+/**
+T: O(3^n + 4^m)
+S: O(3^n + 4^m)
+*/
