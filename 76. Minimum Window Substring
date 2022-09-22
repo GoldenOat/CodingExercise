@@ -1,0 +1,68 @@
+76. Minimum Window Substring
+https://leetcode.com/problems/minimum-window-substring/
+
+class Solution {
+    public String minWindow(String s, String t) {
+        // corner case: t.len > s.len
+        if (t.length() > s.length()) {
+            return "";
+        }
+        // use hashmap to store<char, freq> of t
+        Map<Character, Integer> hm = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            hm.put(c, hm.getOrDefault(c, 0) + 1);
+        }
+        // sliding window: l,r = 0;
+        // int minLen track mininum window size
+        // int match: track if window satisfied
+        // int minLeft: mark the start of mininum window
+        int l = 0;
+        int r = 0;
+        int minLen = Integer.MAX_VALUE;
+        int minLeft = 0;
+        int match = 0;
+        
+        // loop over s
+        while (r < s.length()) {
+            Integer freq = hm.get(s.charAt(r)); // <a 1>
+            /**
+             each time we expand r:
+                1. update freq ++
+                2. update match: if <a ?> -> <a 0>: we match ++, 
+            */
+            if (freq != null) { // s[f] in hm 
+                hm.put(s.charAt(r), freq - 1);
+                if (freq - 1 == 0) {
+                    match ++;
+                }
+            }
+            // when window satisfied: (match == hm.size)
+            // we shift l pointer: 
+            /**
+             each time we shrink by l, we need to check:
+                if <a 0> -> <a ?>: we match --, we also need to update minlen and minLeft
+            */
+            while (match == hm.size()) {
+                Integer freq2 = hm.get(s.charAt(l));
+                if (freq2 != null) {
+                    hm.put(s.charAt(l), freq2 + 1);
+                    if (freq2 == 0) {
+                        if (minLen > r - l + 1) {
+                            minLen = r - l + 1;
+                            minLeft = l;
+                        }
+                        match --;
+                    }
+                }        
+                l ++;
+            }            
+            r ++;
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + minLen);          
+    }
+}
+
+/**
+T: O(t.len + s.len)
+S: O(t.len)
+*/
