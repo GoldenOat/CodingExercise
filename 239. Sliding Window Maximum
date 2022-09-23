@@ -1,0 +1,47 @@
+239. Sliding Window Maximum
+https://leetcode.com/problems/sliding-window-maximum/
+
+
+/**
+using a deque to store index
+step1: process the first k elements separately to initiate the deque
+step2: iterate over the array
+    for each time: 
+        clean the deque: {
+            keep only the index of elements from the current window;
+            remove index of all elements smaller than current one
+        }
+        append curr to deque
+        append deque[0] to rslt
+*/
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if (k == 1) {
+            return nums;
+        }
+        int[] rslt = new int[nums.length - k + 1];
+        Deque<Integer> queue = new ArrayDeque<>(); 
+        int ri = 0;
+        for (int i = 0; i < nums.length; i ++) {
+            // remove the index which is not in current window
+            if (!queue.isEmpty() && queue.peekFirst() < i - k + 1) {
+                queue.pollFirst();
+            }
+            // remove index of all elements smaller than current one
+            while (!queue.isEmpty() && nums[i] > nums[queue.peekLast()]) {
+                queue.pollLast();
+            }
+            // append curr to deque
+            queue.offerLast(i);
+            // append deque[0] to rslt
+            if (i >= k - 1) {
+                rslt[ri ++] = nums[queue.peekFirst()];
+            }
+        } 
+        return rslt;
+    }
+}
+/**
+T: O(n) each element is processed exactly twice - it's index added and then removed from the deque
+S: O(n)
+*/
