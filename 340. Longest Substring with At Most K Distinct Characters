@@ -1,0 +1,48 @@
+340. Longest Substring with At Most K Distinct Characters
+https://leetcode.com/problems/longest-substring-with-at-most-k-distinct-characters/
+
+/**
+int i, j = 0 -> sliding window
+hashmap<char, freq>
+int d = 0 : distinct count
+while (j < s.len), j++
+iterate over arr:
+    for each step:
+        1> expand: if hm.get(s[j]) == null || 0, add <s[j], 1>, d ++
+                   else hm.get(s[j] freq++);
+        2> left shift: i ++
+        if (d > k): if hm.get(s[i] != null),  hm<s[i], freq-->
+                  if (freqNow == 0), d --;                        
+                    
+*/
+class Solution {
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        char[] arr = s.toCharArray();
+        int start = 0;
+        Map<Character, Integer> hm = new HashMap<>();
+        int distinct = 0;
+        int end;
+        for (end = 0; end < arr.length; end ++) {
+            if (hm.get(arr[end]) == null || hm.get(arr[end]) == 0) {
+                distinct ++;
+            } 
+            hm.put(arr[end], hm.getOrDefault(arr[end], 0) + 1);
+            
+            if (distinct > k) {
+                if (hm.get(arr[start]) != null) {
+                    hm.put(arr[start], hm.get(arr[start]) - 1);
+                    if (hm.get(arr[start]) == 0) {
+                        distinct --;
+                    }
+                }
+                start ++;
+            }
+        }
+        return end - start;    
+    }
+}
+
+/**
+T:O(N) in the best case of k distinct characters in the string and O(Nk) in the worst case of N distinct characters in the string.
+S: O(k)
+*/
