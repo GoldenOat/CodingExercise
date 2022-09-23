@@ -43,6 +43,6 @@ class Solution {
 }
 
 /**
-T:O(N) in the best case of k distinct characters in the string and O(Nk) in the worst case of N distinct characters in the string.
+T:O(N) 
 S: O(k)
 */
