@@ -1,0 +1,45 @@
+155. Min Stack
+https://leetcode.com/problems/min-stack/
+
+class MinStack {
+    // use two stacks:
+    // counterStack: is used to record current min values
+    Deque<Integer> stack;
+    Deque<Integer> counterStack;
+
+    public MinStack() {
+        stack = new ArrayDeque<>();
+        counterStack = new ArrayDeque<>();        
+    }
+    
+    public void push(int val) {
+        stack.offerFirst(val);   
+        if (counterStack.isEmpty() || counterStack.peekFirst() > val) {
+            counterStack.offerFirst(val);
+        } else {
+            counterStack.offerFirst(counterStack.peekFirst());
+        }
+    }
+    
+    public void pop() {
+        stack.pollFirst();
+        counterStack.pollFirst();
+    }
+    
+    public int top() {
+        return stack.peekFirst();
+    }
+    
+    public int getMin() {
+        return counterStack.peekFirst();
+    }
+}
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack obj = new MinStack();
+ * obj.push(val);
+ * obj.pop();
+ * int param_3 = obj.top();
+ * int param_4 = obj.getMin();
+ */
