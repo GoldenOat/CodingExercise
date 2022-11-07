@@ -1,0 +1,35 @@
+import java.util.*;
+
+/**
+ * 739. Daily Temperatures
+ * https://leetcode.com/problems/daily-temperatures/
+ */
+public class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int[] rslt = new int[temperatures.length];
+        Deque<Integer> stack = new ArrayDeque<>();
+        for (int currDay = 0; currDay < temperatures.length; currDay ++) {
+            while (!stack.isEmpty() && temperatures[currDay] > temperatures[stack.peekLast()]) {
+                int prevDay = stack.pollLast();
+                rslt[prevDay] = currDay - prevDay;
+            }
+            stack.addLast(currDay);
+        }
+        return rslt;
+    }
+
+    public static void main(String[] args) {
+        Solution test = new Solution();
+        int[] test1 = new int[]{73, 74, 75, 71, 69, 72, 76, 73};
+        int[] test2 = new int[]{30,40,50,60};
+        int[] test3 = new int[]{30,60,90};
+        System.out.println(Arrays.toString(test.dailyTemperatures(test3)));
+    }
+}
+/*
+TC: O(n)
+SC: O(n)
+*/
+
+
+
